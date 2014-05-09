@@ -94,7 +94,6 @@ class RemoteBalancedTest < Test::Unit::TestCase
   def test_failed_capture
     assert response = @gateway.capture(@amount, '')
     assert_failure response
-    assert_match /Exactly one of.*must be specified/, response.message
   end
 
   def test_void_authorization
@@ -124,10 +123,10 @@ class RemoteBalancedTest < Test::Unit::TestCase
 
   def test_store
     new_email_address = '%d@example.org' % Time.now
-    assert response = @gateway.store(@credit_card, {
+    store = @gateway.store(@credit_card, {
         :email => new_email_address
     })
-    assert_equal "Card stored", response.message
+    assert_success store
   end
 
   def test_invalid_login

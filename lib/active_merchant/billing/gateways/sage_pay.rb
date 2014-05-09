@@ -191,7 +191,7 @@ module ActiveMerchant #:nodoc:
 
       def add_invoice(post, options)
         add_pair(post, :VendorTxCode, sanitize_order_id(options[:order_id]), :required => true)
-        add_pair(post, :Description, options[:description] || options[:order_id])
+        add_pair(post, :Description, truncate_description(options[:description] || options[:order_id]))
       end
 
       def add_credit_card(post, credit_card)
@@ -211,6 +211,11 @@ module ActiveMerchant #:nodoc:
 
       def sanitize_order_id(order_id)
         order_id.to_s.gsub(/[^-a-zA-Z0-9._]/, '')
+      end
+
+      def truncate_description(description)
+        return nil unless description
+        description[0, 100]
       end
 
       def map_card_type(credit_card)
@@ -285,8 +290,12 @@ module ActiveMerchant #:nodoc:
         parameters.update(
           :Vendor => @options[:login],
           :TxType => TRANSACTIONS[action],
-          :VPSProtocol => "2.23"
+          :VPSProtocol => "3.00"
         )
+
+        if(application_id && (application_id != Gateway.application_id))
+          parameters.update(:ReferrerID => application_id)
+        end
 
         parameters.collect { |key, value| "#{key}=#{CGI.escape(value.to_s)}" }.join("&")
       end

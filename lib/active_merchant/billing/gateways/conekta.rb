@@ -37,7 +37,7 @@ module ActiveMerchant #:nodoc:
         commit(:post, "charges", post)
       end
 
-      def capture(identifier, money, options = {})
+      def capture(money, identifier, options = {})
         post = {}
 
         post[:order_id] = identifier
@@ -46,7 +46,7 @@ module ActiveMerchant #:nodoc:
         commit(:post, "charges/#{identifier}/capture", post)
       end
 
-      def refund(identifier, money, options)
+      def refund(money, identifier, options)
         post = {}
 
         post[:order_id] = identifier
@@ -77,8 +77,9 @@ module ActiveMerchant #:nodoc:
       private
 
       def add_order(post, money, options)
-        post[:description] = options[:description]
+        post[:description] = options[:description] || "Active Merchant Purchase"
         post[:reference_id] = options[:order_id]
+        post[:currency] = (options[:currency] || currency(money)).downcase
         post[:amount] = amount(money)
       end
 
@@ -174,20 +175,12 @@ module ActiveMerchant #:nodoc:
       end
 
       def headers(meta)
-        @@ua ||= JSON.dump({
-          :bindings_version => ActiveMerchant::VERSION,
-          :lang => 'ruby',
-          :lang_version => "#{RUBY_VERSION} p#{RUBY_PATCHLEVEL} (#{RUBY_RELEASE_DATE})",
-          :platform => RUBY_PLATFORM,
-          :publisher => 'active_merchant'
-        })
-
         {
           "Accept" => "application/vnd.conekta-v#{options[:version]}+json",
           "Authorization" => "Basic " + Base64.encode64("#{options[:key]}:"),
           "RaiseHtmlError" => "false",
           "User-Agent" => "Conekta ActiveMerchantBindings/#{ActiveMerchant::VERSION}",
-          "X-Conekta-Client-User-Agent" => @@ua,
+          "X-Conekta-Client-User-Agent" => user_agent,
           "X-Conekta-Client-User-Metadata" => meta.to_json
         }
       end

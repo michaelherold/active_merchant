@@ -1,8 +1,8 @@
 # Active Merchant
-[![Build Status](https://secure.travis-ci.org/Shopify/active_merchant.png)](http://travis-ci.org/Shopify/active_merchant)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/Shopify/active_merchant)
+[![Build Status](https://travis-ci.org/Shopify/active_merchant.png?branch=master)](https://travis-ci.org/Shopify/active_merchant)
+[![Code Climate](https://codeclimate.com/github/Shopify/active_merchant.png)](https://codeclimate.com/github/Shopify/active_merchant)
 
-Active Merchant is an extraction from the e-commerce system [Shopify](http://www.shopify.com).
+Active Merchant is an extraction from the ecommerce system [Shopify](http://www.shopify.com).
 Shopify's requirements for a simple and unified API to access dozens of different payment
 gateways with very different internal APIs was the chief principle in designing the library.
 
@@ -40,39 +40,41 @@ Or, if you're using Bundler, just add the following to your Gemfile:
 This simple example demonstrates how a purchase can be made using a person's
 credit card details.
 
-    require 'rubygems'
-    require 'active_merchant'
+```ruby
+require 'rubygems'
+require 'active_merchant'
 
-    # Use the TrustCommerce test servers
-    ActiveMerchant::Billing::Base.mode = :test
+# Use the TrustCommerce test servers
+ActiveMerchant::Billing::Base.mode = :test
 
-    gateway = ActiveMerchant::Billing::TrustCommerceGateway.new(
-                :login => 'TestMerchant',
-                :password => 'password')
+gateway = ActiveMerchant::Billing::TrustCommerceGateway.new(
+            :login => 'TestMerchant',
+            :password => 'password')
 
-    # ActiveMerchant accepts all amounts as Integer values in cents
-    amount = 1000  # $10.00
+# ActiveMerchant accepts all amounts as Integer values in cents
+amount = 1000  # $10.00
 
-    # The card verification value is also known as CVV2, CVC2, or CID
-    credit_card = ActiveMerchant::Billing::CreditCard.new(
-                    :first_name         => 'Bob',
-                    :last_name          => 'Bobsen',
-                    :number             => '4242424242424242',
-                    :month              => '8',
-                    :year               => Time.now.year+1,
-                    :verification_value => '000')
+# The card verification value is also known as CVV2, CVC2, or CID
+credit_card = ActiveMerchant::Billing::CreditCard.new(
+                :first_name         => 'Bob',
+                :last_name          => 'Bobsen',
+                :number             => '4242424242424242',
+                :month              => '8',
+                :year               => Time.now.year+1,
+                :verification_value => '000')
 
-    # Validating the card automatically detects the card type
-    if credit_card.valid?
-      # Capture $10 from the credit card
-      response = gateway.purchase(amount, credit_card)
+# Validating the card automatically detects the card type
+if credit_card.valid?
+  # Capture $10 from the credit card
+  response = gateway.purchase(amount, credit_card)
 
-      if response.success?
-        puts "Successfully charged $#{sprintf("%.2f", amount / 100)} to the credit card #{credit_card.display_number}"
-      else
-        raise StandardError, response.message
-      end
-    end
+  if response.success?
+    puts "Successfully charged $#{sprintf("%.2f", amount / 100)} to the credit card #{credit_card.display_number}"
+  else
+    raise StandardError, response.message
+  end
+end
+```
 
 For more in-depth documentation and tutorials, see [GettingStarted.md](GettingStarted.md) and the
 [API documentation](http://rubydoc.info/github/Shopify/active_merchant/master/file/README.md).
@@ -83,7 +85,7 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 
 * [App55](https://www.app55.com/) - AU, BR, CA, CH, CL, CN, CO, CZ, DK, EU, GB, HK, HU, ID, IS, JP, KE, KR, MX, MY, NO, NZ, PH, PL, TH, TW, US, VN, ZA
 * [Authorize.Net CIM](http://www.authorize.net/) - US
-* [Authorize.Net](http://www.authorize.net/) - US, CA, GB
+* [Authorize.Net](http://www.authorize.net/) - AD, AT, AU, BE, BG, CA, CH, CY, CZ, DE, DK, ES, FI, FR, GB, GB, GI, GR, HU, IE, IT, LI, LU, MC, MT, NL, NO, PL, PT, RO, SE, SI, SK, SM, TR, US, VA
 * [Balanced](https://www.balancedpayments.com/) - US
 * [Banwire](http://www.banwire.com/) - MX
 * [Barclays ePDQ Extra Plus](http://www.barclaycard.co.uk/business/accepting-payments/epdq-ecomm/) - GB
@@ -92,8 +94,10 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 * [Beanstream.com](http://www.beanstream.com/) - CA, US
 * [BluePay](http://www.bluepay.com/) - US
 * [Braintree](http://www.braintreepaymentsolutions.com) - US, CA, AU, AD, AT, BE, BG, CY, CZ, DK, EE, FI, FR, GI, DE, GR, HU, IS, IM, IE, IT, LV, LI, LT, LU, MT, MC, NL, NO, PL, PT, RO, SM, SK, SI, ES, SE, CH, TR, GB
+* [BridgePay](http://www.bridgepaynetwork.com/) - CA, US
 * [CardSave](http://www.cardsave.net/) - GB
 * [CardStream](http://www.cardstream.com/) - GB
+* [Cecabank](http://www.ceca.es/es/) - ES
 * [CertoDirect](http://www.certodirect.com/) - BE, BG, CZ, DK, DE, EE, IE, EL, ES, FR, IT, CY, LV, LT, LU, HU, MT, NL, AT, PL, PT, RO, SI, SK, FI, SE, GB
 * [Conekta](https://conekta.io) - MX
 * [CyberSource](http://www.cybersource.com) - US, BR, CA, CN, DK, FI, FR, DE, JP, MX, NO, SE, GB, SG
@@ -110,9 +114,10 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 * [Finansbank WebPOS](https://www.fbwebpos.com/) - US, TR
 * [First Pay](http://www.first-pay.com) - US
 * [FirstData Global Gateway e4](http://www.firstdata.com) - CA, US
+* [FirstGiving](http://www.firstgiving.com/) - US
 * [Garanti Sanal POS](https://sanalposweb.garanti.com.tr) - US, TR
 * [HDFC](http://www.hdfcbank.com/sme/sme-details/merchant-services/guzh6m0i) - IN
-* [IATSPayments](http://www.iatspayments.com/) - US, CA, GB
+* [iATS Payments](http://home.iatspayments.com/) - AU, CA, CH, DE, DK, ES, FI, FR, GR, HK, IE, IT, JP, NL, NO, NZ, PT, SE, SG, TR, UK, US
 * [Inspire Commerce](http://www.inspiregateway.com) - US
 * [InstaPay](http://www.instapayllc.com) - US
 * [Iridium](http://www.iridiumcorp.co.uk/) - GB, ES
@@ -120,6 +125,7 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 * [JetPay](http://www.jetpay.com/) - US
 * [LinkPoint](http://www.linkpoint.com/) - US
 * [Litle & Co.](http://www.litle.com/) - US
+* [maxiPago!](http://www.maxipago.com/) - BR
 * [Merchant e-Solutions](http://www.merchante-solutions.com/) - US
 * [Merchant One Gateway](http://merchantone.com/) - US
 * [MerchantWARE](http://merchantwarehouse.com/merchantware) - US
@@ -138,13 +144,15 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 * [NETPAY Gateway](http://www.netpay.com.mx) - MX
 * [NMI](http://nmi.com/) - US
 * [Ogone](http://www.ogone.com/) - BE, DE, FR, NL, AT, CH
+* [Openpay](Openpay) - MX
 * [Optimal Payments](http://www.optimalpayments.com/) - CA, US, GB
 * [Orbital Paymentech](http://chasepaymentech.com/) - US, CA
+* [PagoFacil](http://www.pagofacil.net/) - MX
 * [PayGate PayXML](http://paygate.co.za/) - US, ZA
 * [PayJunction](http://www.payjunction.com/) - US
 * [PaySecure](http://www.commsecure.com.au/paysecure.shtml) - AU
 * [Paybox Direct](http://www.paybox.com/) - FR
-* [Payex](http://payex.com/) - DK, NO, SE
+* [Payex](http://payex.com/) - DK, FI, NO, SE
 * [PaymentExpress](http://www.paymentexpress.com/) - AU, CA, DE, ES, FR, GB, HK, IE, MY, NL, NZ, SG, US, ZA
 * [PAYMILL](https://paymill.com) - AD, AT, BE, BG, CH, CY, CZ, DE, DK, EE, ES, FI, FO, FR, GB, GI, GR, HU, IE, IL, IS, IT, LI, LT, LU, LV, MT, NL, NO, PL, PT, RO, SE, SI, SK, TR, VA
 * [PayPal Express Checkout](https://www.paypal.com/webapps/mpp/express-checkout) - US, CA, SG, AU
@@ -188,6 +196,7 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 * [ViaKLIX](http://viaklix.com) - US
 * [Vindicia](http://www.vindicia.com/) - US, CA, GB, AU, MX, BR, DE, KR, CN, HK
 * [WebPay](https://webpay.jp/) - JP
+* [WePay](https://www.wepay.com/) - US
 * [Wirecard](http://www.wirecard.com) - AD, CY, GI, IM, MT, RO, CH, AT, DK, GR, IT, MC, SM, TR, BE, EE, HU, LV, NL, SK, GB, BG, FI, IS, LI, NO, SI, VA, FR, IL, LT, PL, ES, CZ, DE, IE, LU, PT, SE
 * [WorldPay](http://www.worldpay.com/) - HK, US, GB, AU, AD, BE, CH, CY, CZ, DE, DK, ES, FI, FR, GI, GR, HU, IE, IL, IT, LI, LU, MC, MT, NL, NO, NZ, PL, PT, SE, SG, SI, SM, TR, UM, VA
 
@@ -201,6 +210,7 @@ The [ActiveMerchant Wiki](http://github.com/Shopify/active_merchant/wikis) conta
 * [DirecPay](http://www.timesofmoney.com/direcpay/jsp/home.jsp)
 * [Direct-eBanking / sofortueberweisung.de by Payment-Networks AG](https://www.payment-network.com/deb_com_en/merchantarea/home) - DE, AT, CH, BE, UK, NL
 * [Dotpay](http://dotpay.pl)
+* [Doku](http://doku.com)
 * [Dwolla](https://www.dwolla.com/default.aspx)
 * [ePay](http://www.epay.dk/epay-payment-solutions/)
 * [First Data](https://firstdata.zendesk.com/entries/407522-first-data-global-gateway-e4sm-payment-pages-integration-manual)

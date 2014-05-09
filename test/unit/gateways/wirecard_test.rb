@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 
 class WirecardTest < Test::Unit::TestCase
@@ -61,7 +62,8 @@ class WirecardTest < Test::Unit::TestCase
     assert_failure response
     assert response.test?
     assert_equal TEST_AUTHORIZATION_GUWID, response.authorization
-    assert response.message[/credit card number not allowed in demo mode/i]
+    assert_match /credit card number not allowed in demo mode/i, response.message
+    assert_equal '24997', response.params['ErrorCode']
   end
 
   def test_successful_authorization_and_capture
@@ -156,7 +158,7 @@ class WirecardTest < Test::Unit::TestCase
   end
 
   def test_description_trucated_to_32_chars_in_authorize
-    options = {:description => "32chars-------------------------EXTRA"}
+    options = { description: "32chars-------------------------EXTRA" }
 
     stub_comms do
       @gateway.authorize(@amount, @credit_card, options)
@@ -166,12 +168,22 @@ class WirecardTest < Test::Unit::TestCase
   end
 
   def test_description_trucated_to_32_chars_in_purchase
-    options = {:description => "32chars-------------------------EXTRA"}
+    options = { description: "32chars-------------------------EXTRA" }
 
     stub_comms do
       @gateway.purchase(@amount, @credit_card, options)
     end.check_request do |endpoint, data, headers|
       assert_match(/<FunctionID>32chars-------------------------<\/FunctionID>/, data)
+    end.respond_with(successful_purchase_response)
+  end
+
+  def test_description_is_ascii_encoded_since_wirecard_does_not_like_utf_8
+    options = { description: "¿Dónde está la estación?" }
+
+    stub_comms do
+      @gateway.purchase(@amount, @credit_card, options)
+    end.check_request do |endpoint, data, headers|
+      assert_match(/<FunctionID>\?D\?nde est\? la estaci\?n\?<\/FunctionID>/, data)
     end.respond_with(successful_purchase_response)
   end
 

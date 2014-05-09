@@ -140,6 +140,25 @@ class SagePayTest < Test::Unit::TestCase
     end.respond_with(successful_purchase_response)
   end
 
+  def test_description_is_truncated
+    stub_comms(@gateway, :ssl_request) do
+      @gateway.purchase(@amount, @credit_card, @options.merge(description: "SagePay transactions fail if the description is more than 100 characters. Therefore, we truncate it to 100 characters."))
+    end.check_request do |method, endpoint, data, headers|
+      assert_match(/&Description=SagePay\+transactions\+fail\+if\+the\+description\+is\+more\+than\+100\+characters.\+Therefore%2C\+we\+truncate\+it\+&/, data)
+    end.respond_with(successful_purchase_response)
+  end
+
+  def test_referrer_id_is_added_to_post_data_parameters
+    ActiveMerchant::Billing::SagePayGateway.application_id = '00000000-0000-0000-0000-000000000001'
+    stub_comms(@gateway, :ssl_request) do
+      @gateway.purchase(@amount, @credit_card, @options)
+    end.check_request do |method, endpoint, data, headers|
+      assert data.include?("ReferrerID=00000000-0000-0000-0000-000000000001")
+    end.respond_with(successful_purchase_response)
+  ensure
+    ActiveMerchant::Billing::SagePayGateway.application_id = nil
+  end
+
   private
 
   def successful_purchase_response

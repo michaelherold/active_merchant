@@ -2,8 +2,8 @@ module ActiveMerchant #:nodoc:
   module Billing #:nodoc:
     class PaymillGateway < Gateway
       self.supported_countries = %w(AD AT BE BG CH CY CZ DE DK EE ES FI FO FR GB
-                                    GI GR HU IE IL IS IT LI LT LU LV MT NL NO PL
-                                    PT RO SE SI SK TR VA)
+                                    GI GR HR HU IE IL IM IS IT LI LT LU LV MC MT
+                                    NL NO PL PT RO SE SI SK TR VA)
 
       self.supported_cardtypes = [:visa, :master]
       self.homepage_url = 'https://paymill.com'
@@ -66,7 +66,11 @@ module ActiveMerchant #:nodoc:
         begin
           raw_response = ssl_request(method, "https://api.paymill.com/v2/#{url}", post_data(parameters), headers)
         rescue ResponseError => e
-          parsed = JSON.parse(e.response.body)
+          begin
+            parsed = JSON.parse(e.response.body)
+          rescue JSON::ParserError
+            return Response.new(false, "Unable to parse error response: '#{e.response.body}'")
+          end
           return Response.new(false, response_message(parsed), parsed, {})
         end
 

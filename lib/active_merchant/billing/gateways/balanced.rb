@@ -353,7 +353,7 @@ module ActiveMerchant #:nodoc:
           :on_behalf_of_uri,
           :meta
         ]
-        post.update(options.select { |key, _| common_params.include? key })
+        post.update(options.select{|key, _| common_params.include?(key)})
       end
 
       def add_credit_card(post, credit_card, options)

@@ -71,6 +71,10 @@ module ActiveMerchant #:nodoc:
 
 
       private
+      def clean_description(description)
+        description.to_s.slice(0,32).encode("US-ASCII", invalid: :replace, undef: :replace, replace: '?')
+      end
+
       def prepare_options_hash(options)
         result = @options.merge(options)
         setup_address_hash!(result)
@@ -139,7 +143,7 @@ module ActiveMerchant #:nodoc:
         options[:order_id] ||= generate_unique_id
 
         xml.tag! "FNC_CC_#{options[:action].to_s.upcase}" do
-          xml.tag! 'FunctionID', options[:description].to_s.slice(0,32)
+          xml.tag! 'FunctionID', clean_description(options[:description])
           xml.tag! 'CC_TRANSACTION' do
             xml.tag! 'TransactionID', options[:order_id]
             case options[:action]
@@ -235,22 +239,27 @@ module ActiveMerchant #:nodoc:
       # Parse the <ProcessingStatus> Element which contains all important information
       def parse_response(response, root)
         status = nil
-        # get the root element for this Transaction
+
         root.elements.to_a.each do |node|
           if node.name =~ /FNC_CC_/
             status = REXML::XPath.first(node, "CC_TRANSACTION/PROCESSING_STATUS")
           end
         end
+
         message = ""
         if status
           if info = status.elements['Info']
             message << info.text
           end
-          # Get basic response information
+
           status.elements.to_a.each do |node|
             response[node.name.to_sym] = (node.text || '').strip
           end
+
+          error_code = REXML::XPath.first(status, "ERROR/Number")
+          response['ErrorCode'] = error_code.text if error_code
         end
+
         parse_error(root, message)
         response[:Message] = message
       end

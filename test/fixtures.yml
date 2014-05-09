@@ -71,6 +71,11 @@ braintree_blue_with_processing_rules:
   public_key: Y
   private_key: Z
 
+# Working credentials, no need to replace
+bridge_pay:
+  user_name: Spre3676
+  password: H3392nc5
+
 #Username/Password given in sign up email. Not MMS credentials
 card_save:
   login: merchant_id
@@ -80,8 +85,11 @@ card_stream:
   login: X
   password: Y
 
-card_stream_modern:
-  login: "0000992"
+cecabank:
+  merchant_id: MERCHANTID
+  acquirer_bin: ACQUIRERBIN
+  terminal_id: TERMINALID
+  key: KEY
 
 certo_direct:
   login: 1
@@ -163,6 +171,11 @@ firstdata_e4:
   login:
   password:
 
+first_giving:
+  application_key: ''
+  security_token:  ''
+  charity_id: "1234"
+
 garanti:
   login: "PROVAUT"
   terminal_id: 111995
@@ -211,6 +224,11 @@ litle:
   login: ACTIVE
   password: MERCHANT
   merchant_id: 101
+
+# Working test credentials, no need to replace
+maxipago:
+  login: "100"
+  password: "21g8u6gh6szw1gywfs165vui"
 
 # Working test credentials, no need to replace
 merchant_esolutions:
@@ -321,6 +339,11 @@ ogone:
   password: PASSWORD
   signature: SIGNATURE
 
+# Working credentials, no need to replace
+openpay:
+  key: 'sk_e568c42a6c384b7ab02cd47d2e407cab'
+  merchant_id: 'mzdtln0bmtms6o3kck8f'
+
 optimal_payment:
   login: test
   password: test
@@ -334,6 +357,12 @@ orbital_gateway:
   login: LOGIN
   password: PASSWORD
   merchant_id: MERCHANTID
+
+# Working credentials, no need to replace
+pago_facil:
+  branch_id: 60f961360ca187d533d5adba7d969d6334771370
+  merchant_id: 62ad6f592ecf2faa87ef2437ed85a4d175e73c58
+  service_id: 3
 
 # Working credentials, no need to replace
 pay_gate_xml:
@@ -636,7 +665,7 @@ transax:
   login: transaxdemo
   password: nelix123
 
-transnational:
+network_merchants:
   login: demo
   password: password
 
@@ -677,6 +706,12 @@ webpay:
   login: "test_secret_eHn4TTgsGguBcW764a2KA8Yd"
 
 # Working test credentials, no need to replace
+wepay:
+  client_id: "187493"
+  account_id: "1311201206"
+  access_token: "STAGE_4c6a319f9b6ef50e596ee3ea0b845f2fecd50fa0d8bc0b7483bd61c2018dbf5c"
+
+# Working test credentials, no need to replace
 wirecard:
   login: 56500
   password: TestXAPTER
@@ -686,8 +721,9 @@ world_pay_gateway:
   password: PASSWORD
 
 iats_payments:
-  login: TEST88
+  agent_code: TEST88
   password: TEST88
+  region: na
 
 bit_pay:
   api_key: 'rKrahSl7WRrYeKRUhGzbvW3nBzo0jG4FPaL8uPYaoPk'
@@ -696,3 +732,6 @@ wirecard_checkout_page:
   secret: B8AKTPWBRMNBV455FG6M2DANE99WU2
   shop_id: ''
   paymenttype: IDL
+
+mollie_ideal:
+  api_key: 'test_8isBjQoJXJoiXRSzjhwKPO1Bo9AkVA'

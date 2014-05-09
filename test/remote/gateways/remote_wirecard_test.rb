@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'test_helper'
 
 class RemoteWirecardTest < Test::Unit::TestCase
@@ -86,6 +87,12 @@ class RemoteWirecardTest < Test::Unit::TestCase
     assert_match /THIS IS A DEMO/, response.message
   end
 
+  def test_utf8_description_does_not_blow_up
+    assert response = @gateway.purchase(@amount, @credit_card, @options.merge(description: "Habitación"))
+    assert_success response
+    assert_match /THIS IS A DEMO/, response.message
+  end
+
   def test_successful_purchase_with_german_address_german_state_and_german_phone
     assert response = @gateway.purchase(@amount, @credit_card, @options.merge(:billing_address => @german_address))
 
@@ -121,6 +128,7 @@ class RemoteWirecardTest < Test::Unit::TestCase
     assert response.test?
     assert_failure response
     assert response.message[ /Credit card number not allowed in demo mode/ ], "Got wrong response message"
+    assert_equal "24997", response.params['ErrorCode']
   end
 
   def test_unauthorized_capture
